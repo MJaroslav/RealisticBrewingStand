@@ -24,12 +24,16 @@ repositories {
         name 'CB Repo'
         url "http://chickenbones.net/maven/"
     }
+    maven {
+        name = "jitpack"
+        url "https://jitpack.io"
+    }
 }
 
 apply plugin: 'forge'
 
-version = "1.7.10-1"
-group= "com.yourname.modid" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+version = "1.1.0"
+group= "mjaroslav.mcmods.realisticbrewingstand" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "realisticbrewingstand"
 
 compileJava.options.encoding = 'UTF-8'
@@ -58,7 +62,7 @@ dependencies {
     compile "codechicken:CodeChickenCore:1.7.10-1.0.7.47:dev"
     compile "codechicken:NotEnoughItems:1.7.10-1.0.5.120:dev"
     compile "mcp.mobius.waila:Waila:1.5.10_1.7.10"
-
+    compile "com.github.MJaroslav:MJUtils:1.4.0"
 }
 
 processResources
