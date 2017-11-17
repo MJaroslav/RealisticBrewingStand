@@ -1,31 +1,34 @@
 package mjaroslav.mcmods.realisticbrewingstand.common.init;
 
 import cpw.mods.fml.common.event.*;
+import cpw.mods.fml.common.network.NetworkRegistry;
 import mjaroslav.mcmods.mjutils.common.objects.IModModule;
 import mjaroslav.mcmods.mjutils.common.objects.ModInitModule;
 import mjaroslav.mcmods.realisticbrewingstand.RBSInfo;
-import mjaroslav.mcmods.realisticbrewingstand.common.integration.EtFuturumIntegration;
+import mjaroslav.mcmods.realisticbrewingstand.client.gui.GuiHandler;
+import mjaroslav.mcmods.realisticbrewingstand.common.event.PlayerEvents;
+import net.minecraftforge.common.MinecraftForge;
 
 @ModInitModule(modid = RBSInfo.MODID)
-public class RBSIntegration implements IModModule {
+public class RBSOther implements IModModule {
 	@Override
 	public String getModuleName() {
-		return "Integration";
+		return "Other";
 	}
 
 	@Override
 	public int getPriority() {
-		return 1;
+		return 2;
 	}
 
 	@Override
 	public void preInit(FMLPreInitializationEvent arg0) {
-		EtFuturumIntegration.checkExist();
-		EtFuturumIntegration.registerBlock();
 	}
 
 	@Override
 	public void init(FMLInitializationEvent arg0) {
+		NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
+		MinecraftForge.EVENT_BUS.register(new PlayerEvents());
 	}
 
 	@Override

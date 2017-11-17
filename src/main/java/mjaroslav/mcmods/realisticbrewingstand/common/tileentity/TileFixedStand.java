@@ -4,7 +4,6 @@ import java.util.List;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import ganymedes01.etfuturum.recipes.BrewingFuelRegistry;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.ISidedInventory;
@@ -18,25 +17,23 @@ import net.minecraft.potion.PotionHelper;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.event.ForgeEventFactory;
 
-public class TileEntityFixedBrewingStandEF extends TileEntityFixedBrewingStand {
+public class TileFixedStand extends TileEntity implements ISidedInventory {
 	private static final int[] upSlots = new int[] { 3 };
 	private static final int[] sideSlots = new int[] { 0, 1, 2 };
-	private ItemStack[] brewingItemStacks = new ItemStack[5];
+	private ItemStack[] brewingItemStacks = new ItemStack[4];
 	private int brewTime;
 	private int filledSlots;
 	private Item ingredientID;
 	private String customName;
-	private int fuel;
-	private int currentFuel;
 
-	@Override	
+	@Override
 	public String getInventoryName() {
-		return this.hasCustomInventoryName() ? this.customName : "container.brewing";
+		return hasCustomInventoryName() ? customName : "container.brewing";
 	}
 
 	@Override
 	public boolean hasCustomInventoryName() {
-		return this.customName != null && this.customName.length() > 0;
+		return customName != null && customName.length() > 0;
 	}
 
 	public void setCustomName(String customName) {
@@ -45,33 +42,26 @@ public class TileEntityFixedBrewingStandEF extends TileEntityFixedBrewingStand {
 
 	@Override
 	public int getSizeInventory() {
-		return this.brewingItemStacks.length;
+		return brewingItemStacks.length;
 	}
 
 	@Override
 	public void updateEntity() {
-		if ((this.fuel <= 0) && (this.brewingItemStacks[4] != null)) {
-			this.fuel = (this.currentFuel = BrewingFuelRegistry.getBrewAmount(this.brewingItemStacks[4]));
-			if (--this.brewingItemStacks[4].stackSize <= 0)
-				this.brewingItemStacks[4] = ((this.brewingItemStacks[4].getItem().hasContainerItem(this.brewingItemStacks[4]))
-				    ? this.brewingItemStacks[4].getItem().getContainerItem(this.brewingItemStacks[4]) : null);
-			markDirty();
-		}
-		if (this.brewTime > 0) {
-			--this.brewTime;
-			if (this.brewTime == 0) {
-				this.brewPotions();
-				this.markDirty();
-			} else if (!this.canBrew()) {
-				this.brewTime = 0;
-				this.markDirty();
-			} else if (this.ingredientID != this.brewingItemStacks[3].getItem()) {
-				this.brewTime = 0;
-				this.markDirty();
+		if (brewTime > 0) {
+			--brewTime;
+			if (brewTime == 0) {
+				brewPotions();
+				markDirty();
+			} else if (!canBrew()) {
+				brewTime = 0;
+				markDirty();
+			} else if (ingredientID != brewingItemStacks[3].getItem()) {
+				brewTime = 0;
+				markDirty();
 			}
-		} else if (this.canBrew()) {
-			this.brewTime = 400;
-			this.ingredientID = this.brewingItemStacks[3].getItem();
+		} else if (canBrew()) {
+			brewTime = 400;
+			ingredientID = brewingItemStacks[3].getItem();
 		}
 		if (worldObj.getBlockMetadata(xCoord, yCoord, zCoord) > 0)
 			worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, 0, 2);
@@ -79,20 +69,20 @@ public class TileEntityFixedBrewingStandEF extends TileEntityFixedBrewingStand {
 	}
 
 	public int getBrewTime() {
-		return this.brewTime;
+		return brewTime;
 	}
 
 	private boolean canBrew() {
-		if ((this.fuel > 0) && (this.brewingItemStacks[3] != null) && (this.brewingItemStacks[3].stackSize > 0)) {
-			ItemStack itemStack = this.brewingItemStacks[3];
+		if (brewingItemStacks[3] != null && brewingItemStacks[3].stackSize > 0) {
+			ItemStack itemStack = brewingItemStacks[3];
 			if (!itemStack.getItem().isPotionIngredient(itemStack)) {
 				return false;
 			} else {
 				boolean flag = false;
 				for (int slot = 0; slot < 3; ++slot) {
-					if (this.brewingItemStacks[slot] != null && this.brewingItemStacks[slot].getItem() instanceof ItemPotion) {
-						int meta = this.brewingItemStacks[slot].getItemDamage();
-						int newMeta = this.getMetaAddedIng(meta, itemStack);
+					if (brewingItemStacks[slot] != null && brewingItemStacks[slot].getItem() instanceof ItemPotion) {
+						int meta = brewingItemStacks[slot].getItemDamage();
+						int newMeta = getMetaAddedIng(meta, itemStack);
 						if (!ItemPotion.isSplash(meta) && ItemPotion.isSplash(newMeta)) {
 							flag = true;
 							break;
@@ -116,35 +106,32 @@ public class TileEntityFixedBrewingStandEF extends TileEntityFixedBrewingStand {
 	private void brewPotions() {
 		if (ForgeEventFactory.onPotionAttemptBreaw(brewingItemStacks))
 			return;
-		if (this.canBrew()) {
-			ItemStack itemStack = this.brewingItemStacks[3];
+		if (canBrew()) {
+			ItemStack itemStack = brewingItemStacks[3];
 			for (int slot = 0; slot < 3; ++slot) {
-				if (this.brewingItemStacks[slot] != null && this.brewingItemStacks[slot].getItem() instanceof ItemPotion) {
-					int meta = this.brewingItemStacks[slot].getItemDamage();
-					int newMeta = this.getMetaAddedIng(meta, itemStack);
+				if (brewingItemStacks[slot] != null && brewingItemStacks[slot].getItem() instanceof ItemPotion) {
+					int meta = brewingItemStacks[slot].getItemDamage();
+					int newMeta = getMetaAddedIng(meta, itemStack);
 					List list = Items.potionitem.getEffects(meta);
 					List list1 = Items.potionitem.getEffects(newMeta);
 					if ((meta <= 0 || list != list1) && (list == null || !list.equals(list1) && list1 != null)) {
 						if (meta != newMeta) {
-							this.brewingItemStacks[slot].setItemDamage(newMeta);
+							brewingItemStacks[slot].setItemDamage(newMeta);
 						}
 					} else if (!ItemPotion.isSplash(meta) && ItemPotion.isSplash(newMeta)) {
-						this.brewingItemStacks[slot].setItemDamage(newMeta);
+						brewingItemStacks[slot].setItemDamage(newMeta);
 					}
 				}
 			}
 			if (itemStack.getItem().hasContainerItem(itemStack)) {
-				this.brewingItemStacks[3] = itemStack.getItem().getContainerItem(itemStack);
+				brewingItemStacks[3] = itemStack.getItem().getContainerItem(itemStack);
 			} else {
-				--this.brewingItemStacks[3].stackSize;
-				if (this.brewingItemStacks[3].stackSize <= 0) {
-					this.brewingItemStacks[3] = null;
+				--brewingItemStacks[3].stackSize;
+				if (brewingItemStacks[3].stackSize <= 0) {
+					brewingItemStacks[3] = null;
 				}
 			}
-			this.fuel -= 1;
 			ForgeEventFactory.onPotionBrewed(brewingItemStacks);
-			this.worldObj.playSound(this.xCoord, this.yCoord, this.zCoord, "etfuturum:block.brewing_stand.brew", 1.0F, 1.0F,
-			    true);
 		}
 	}
 
@@ -154,47 +141,37 @@ public class TileEntityFixedBrewingStandEF extends TileEntityFixedBrewingStand {
 		        ? PotionHelper.applyIngredient(ingId, stack.getItem().getPotionEffect(stack)) : ingId);
 	}
 
-	public void readFromNBTS(NBTTagCompound nbt) {
-		NBTTagList nbtTagList = nbt.getTagList("Items", 10);
-		this.brewingItemStacks = new ItemStack[this.getSizeInventory()];
+	public void readFromNBTS(NBTTagCompound nbtTagCompound) {
+		NBTTagList nbtTagList = nbtTagCompound.getTagList("Items", 10);
+		brewingItemStacks = new ItemStack[getSizeInventory()];
 		for (int slot = 0; slot < nbtTagList.tagCount(); ++slot) {
 			NBTTagCompound nbtTagCompound1 = nbtTagList.getCompoundTagAt(slot);
 			byte slotByte = nbtTagCompound1.getByte("Slot");
-			if (slotByte >= 0 && slotByte < this.brewingItemStacks.length) {
-				this.brewingItemStacks[slotByte] = ItemStack.loadItemStackFromNBT(nbtTagCompound1);
+			if (slotByte >= 0 && slotByte < brewingItemStacks.length) {
+				brewingItemStacks[slotByte] = ItemStack.loadItemStackFromNBT(nbtTagCompound1);
 			}
 		}
-		this.brewTime = nbt.getShort("BrewTime");
-		if (nbt.hasKey("CustomName", 8)) {
-			this.customName = nbt.getString("CustomName");
-		}
-		if (nbt.hasKey("Fuel", 2)) {
-			this.fuel = nbt.getInteger("Fuel");
-			if (this.fuel > 0)
-				this.currentFuel = 30;
-		} else {
-			this.fuel = nbt.getInteger("Fuel");
-			this.currentFuel = nbt.getInteger("CurrentFuel");
+		this.brewTime = nbtTagCompound.getShort("BrewTime");
+		if (nbtTagCompound.hasKey("CustomName", 8)) {
+			customName = nbtTagCompound.getString("CustomName");
 		}
 	}
 
-	public void writeToNBTS(NBTTagCompound nbt) {
-		nbt.setShort("BrewTime", (short) this.brewTime);
+	public void writeToNBTS(NBTTagCompound nbtTagCompound) {
+		nbtTagCompound.setShort("BrewTime", (short) brewTime);
 		NBTTagList nbtTagList = new NBTTagList();
 		for (int slot = 0; slot < this.brewingItemStacks.length; ++slot) {
-			if (this.brewingItemStacks[slot] != null) {
+			if (brewingItemStacks[slot] != null) {
 				NBTTagCompound nbtTagCompound1 = new NBTTagCompound();
 				nbtTagCompound1.setByte("Slot", (byte) slot);
-				this.brewingItemStacks[slot].writeToNBT(nbtTagCompound1);
+				brewingItemStacks[slot].writeToNBT(nbtTagCompound1);
 				nbtTagList.appendTag(nbtTagCompound1);
 			}
 		}
-		nbt.setTag("Items", nbtTagList);
-		if (this.hasCustomInventoryName()) {
-			nbt.setString("CustomName", this.customName);
+		nbtTagCompound.setTag("Items", nbtTagList);
+		if (hasCustomInventoryName()) {
+			nbtTagCompound.setString("CustomName", customName);
 		}
-		nbt.setInteger("Fuel", this.fuel);
-		nbt.setInteger("CurrentFuel", this.currentFuel);
 	}
 
 	@Override
@@ -299,21 +276,5 @@ public class TileEntityFixedBrewingStandEF extends TileEntityFixedBrewingStand {
 	@Override
 	public boolean canExtractItem(int slot, ItemStack stack, int side) {
 		return true;
-	}
-
-	public int getFuel() {
-		return this.fuel;
-	}
-
-	public int getCurrentFuel() {
-		return this.currentFuel;
-	}
-
-	public void setFuel(int fuel) {
-		this.fuel = fuel;
-	}
-
-	public void setCurrentFuel(int currentFuel) {
-		this.currentFuel = currentFuel;
 	}
 }

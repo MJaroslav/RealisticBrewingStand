@@ -6,7 +6,7 @@ import java.util.Random;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import mjaroslav.mcmods.realisticbrewingstand.RealisticBrewingStandMod;
-import mjaroslav.mcmods.realisticbrewingstand.common.tileentity.TileEntityFixedBrewingStand;
+import mjaroslav.mcmods.realisticbrewingstand.common.tileentity.TileFixedStandEtFuturum;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBrewingStand;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -24,10 +24,10 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 
-public class BlockFixedBrewingStand extends BlockBrewingStand {
+public class BlockFixedStandEtFuturum extends BlockBrewingStand {
 	private Random rand = new Random();
 	@SideOnly(Side.CLIENT)
-	private IIcon iconFixedBrewingStandBase;
+	private IIcon icon;
 
 	@Override
 	public boolean isOpaqueCube() {
@@ -41,7 +41,7 @@ public class BlockFixedBrewingStand extends BlockBrewingStand {
 
 	@Override
 	public TileEntity createNewTileEntity(World world, int meta) {
-		return new TileEntityFixedBrewingStand();
+		return new TileFixedStandEtFuturum();
 	}
 
 	@Override
@@ -50,59 +50,47 @@ public class BlockFixedBrewingStand extends BlockBrewingStand {
 	}
 
 	@Override
-	public void addCollisionBoxesToList(World world, int x, int y, int z, AxisAlignedBB mask, List list,
-			Entity entity) {
-		this.setBlockBounds(0.4375F, 0.0F, 0.4375F, 0.5625F, 0.875F, 0.5625F);
+	public void addCollisionBoxesToList(World world, int x, int y, int z, AxisAlignedBB mask, List list, Entity entity) {
+		setBlockBounds(0.4375F, 0F, 0.4375F, 0.5625F, 0.875F, 0.5625F);
 		super.addCollisionBoxesToList(world, x, y, z, mask, list, entity);
-		this.setBlockBoundsForItemRender();
+		setBlockBoundsForItemRender();
 		super.addCollisionBoxesToList(world, x, y, z, mask, list, entity);
 	}
 
 	@Override
 	public void setBlockBoundsForItemRender() {
-		this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 0.125F, 1.0F);
+		setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 0.125F, 1.0F);
 	}
 
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX,
-			float hitY, float hitZ) {
-		if (world.isRemote) {
-			return true;
-		} else {
-			TileEntityFixedBrewingStand tileEntityFixedBrewingStand = (TileEntityFixedBrewingStand) world
-					.getTileEntity(x, y, z);
-			if (tileEntityFixedBrewingStand != null) {
-				player.openGui(RealisticBrewingStandMod.instance, 0, world, x, y, z);
-			}
-			return true;
-		}
+	    float hitY, float hitZ) {
+		if (!world.isRemote)
+			player.openGui(RealisticBrewingStandMod.instance, 1, world, x, y, z);
+		return true;
 	}
 
 	@Override
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack stack) {
-		if (stack.hasDisplayName()) {
-			((TileEntityFixedBrewingStand) world.getTileEntity(x, y, z)).setCustomName(stack.getDisplayName());
-		}
+		if (stack.hasDisplayName() && world.getTileEntity(x, y, z) instanceof TileFixedStandEtFuturum)
+			((TileFixedStandEtFuturum) world.getTileEntity(x, y, z)).setCustomName(stack.getDisplayName());
 	}
 
 	@Override
 	public void breakBlock(World world, int x, int y, int z, Block block, int meta) {
-		TileEntity tileEntity = world.getTileEntity(x, y, z);
-		if (tileEntity instanceof TileEntityFixedBrewingStand) {
-			TileEntityFixedBrewingStand tileEntityFixedBrewingStand = (TileEntityFixedBrewingStand) tileEntity;
-			for (int slot = 0; slot < tileEntityFixedBrewingStand.getSizeInventory(); ++slot) {
-				ItemStack itemStack = tileEntityFixedBrewingStand.getStackInSlot(slot);
+		if (world.getTileEntity(x, y, z) instanceof TileFixedStandEtFuturum) {
+			TileFixedStandEtFuturum stand = (TileFixedStandEtFuturum) world.getTileEntity(x, y, z);
+			for (int slot = 0; slot < stand.getSizeInventory(); ++slot) {
+				ItemStack itemStack = stand.getStackInSlot(slot);
 				if (itemStack != null) {
-					float mX = this.rand.nextFloat() * 0.8F + 0.1F;
-					float mY = this.rand.nextFloat() * 0.8F + 0.1F;
-					float mZ = this.rand.nextFloat() * 0.8F + 0.1F;
-					EntityItem entityitem = new EntityItem(world, (double) ((float) x + mX), (double) ((float) y + mY),
-							(double) ((float) z + mZ), itemStack);
-					float mM = 0.05F;
-					entityitem.motionX = (double) ((float) this.rand.nextGaussian() * mM);
-					entityitem.motionY = (double) ((float) this.rand.nextGaussian() * mM + 0.2F);
-					entityitem.motionZ = (double) ((float) this.rand.nextGaussian() * mM);
-					world.spawnEntityInWorld(entityitem);
+					float mX = rand.nextFloat() * 0.8F + 0.1F;
+					float mY = rand.nextFloat() * 0.8F + 0.1F;
+					float mZ = rand.nextFloat() * 0.8F + 0.1F;
+					EntityItem entityItem = new EntityItem(world, x + mX, y + mY, z + mZ, itemStack);
+					entityItem.motionX = rand.nextGaussian() * 0.05F;
+					entityItem.motionY = rand.nextGaussian() * 0.05F + 0.2F;
+					entityItem.motionZ = rand.nextGaussian() * 0.05F;
+					world.spawnEntityInWorld(entityItem);
 				}
 			}
 		}
@@ -117,10 +105,10 @@ public class BlockFixedBrewingStand extends BlockBrewingStand {
 	@SideOnly(Side.CLIENT)
 	@Override
 	public void randomDisplayTick(World world, int x, int y, int z, Random rand) {
-		double mX = (double) ((float) x + 0.4F + rand.nextFloat() * 0.2F);
-		double mY = (double) ((float) y + 0.7F + rand.nextFloat() * 0.3F);
-		double mZ = (double) ((float) z + 0.4F + rand.nextFloat() * 0.2F);
-		world.spawnParticle("smoke", mX, mY, mZ, 0.0D, 0.0D, 0.0D);
+		if (world.getTileEntity(x, y, z) instanceof TileFixedStandEtFuturum
+		    && ((TileFixedStandEtFuturum) world.getTileEntity(x, y, z)).getFuel() > 0)
+			world.spawnParticle("smoke", x + 0.4F + rand.nextFloat() * 0.2F, y + 0.7F + rand.nextFloat() * 0.3F,
+			    z + 0.4F + rand.nextFloat() * 0.2F, 0.0D, 0.0D, 0.0D);
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -143,11 +131,11 @@ public class BlockFixedBrewingStand extends BlockBrewingStand {
 	@Override
 	public void registerBlockIcons(IIconRegister register) {
 		super.registerBlockIcons(register);
-		this.iconFixedBrewingStandBase = register.registerIcon(this.getTextureName() + "_base");
+		icon = register.registerIcon(getTextureName() + "_base");
 	}
 
 	@SideOnly(Side.CLIENT)
 	public IIcon getIconFixedBrewingStandBase() {
-		return this.iconFixedBrewingStandBase;
+		return icon;
 	}
 }

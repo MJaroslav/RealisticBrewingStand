@@ -3,7 +3,7 @@ package mjaroslav.mcmods.realisticbrewingstand.common.inventory;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ganymedes01.etfuturum.recipes.BrewingFuelRegistry;
-import mjaroslav.mcmods.realisticbrewingstand.common.tileentity.TileEntityFixedBrewingStandEF;
+import mjaroslav.mcmods.realisticbrewingstand.common.tileentity.TileFixedStandEtFuturum;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Items;
@@ -12,74 +12,73 @@ import net.minecraft.item.ItemPotion;
 import net.minecraft.item.ItemStack;
 import net.minecraft.stats.AchievementList;
 
-public class ContainerFixedBrewingStandEF extends Container {
-	private TileEntityFixedBrewingStandEF tileFixedBrewingStand;
+public class ContainerFixedStandEtFuturum extends Container {
+	private TileFixedStandEtFuturum stand;
 	private final Slot theSlot;
 	private int brewTime;
 	private int brewFuel;
 	private int brewCurrentFuel;
 
-	public ContainerFixedBrewingStandEF(InventoryPlayer player, TileEntityFixedBrewingStandEF tile) {
-		this.tileFixedBrewingStand = tile;
-		this.addSlotToContainer(new PotionSlot(tile, 0, 56, 51));
-		this.addSlotToContainer(new PotionSlot(tile, 1, 79, 58));
-		this.addSlotToContainer(new PotionSlot(tile, 2, 102, 51));
-		this.theSlot = this.addSlotToContainer(new IngredientSlot(tile, 3, 79, 17));
-		this.addSlotToContainer(new BlazePowderSlot(tile, 4, 17, 17));
-		int line;
-		for (line = 0; line < 3; ++line) {
+	public ContainerFixedStandEtFuturum(InventoryPlayer player, TileFixedStandEtFuturum tile) {
+		stand = tile;
+		addSlotToContainer(new PotionSlot(tile, 0, 56, 51));
+		addSlotToContainer(new PotionSlot(tile, 1, 79, 58));
+		addSlotToContainer(new PotionSlot(tile, 2, 102, 51));
+		theSlot = addSlotToContainer(new IngredientSlot(tile, 3, 79, 17));
+		addSlotToContainer(new BlazePowderSlot(tile, 4, 17, 17));
+		for (int line = 0; line < 3; ++line) {
 			for (int column = 0; column < 9; ++column) {
-				this.addSlotToContainer(new Slot(player, column + line * 9 + 9, 8 + column * 18, 84 + line * 18));
+				addSlotToContainer(new Slot(player, column + line * 9 + 9, 8 + column * 18, 84 + line * 18));
 			}
 		}
-		for (line = 0; line < 9; ++line) {
-			this.addSlotToContainer(new Slot(player, line, 8 + line * 18, 142));
+		for (int line = 0; line < 9; ++line) {
+			addSlotToContainer(new Slot(player, line, 8 + line * 18, 142));
 		}
 	}
 
 	@Override
 	public void addCraftingToCrafters(ICrafting crafting) {
 		super.addCraftingToCrafters(crafting);
-		crafting.sendProgressBarUpdate(this, 0, this.tileFixedBrewingStand.getBrewTime());
+		crafting.sendProgressBarUpdate(this, 0, stand.getBrewTime());
 	}
 
 	@Override
 	public void detectAndSendChanges() {
 		super.detectAndSendChanges();
-		for (int id = 0; id < this.crafters.size(); ++id) {
-			ICrafting iCrafting = (ICrafting) this.crafters.get(id);
-			if (this.brewTime != this.tileFixedBrewingStand.getBrewTime()) {
-				iCrafting.sendProgressBarUpdate(this, 0, this.tileFixedBrewingStand.getBrewTime());
+		for (int id = 0; id < crafters.size(); ++id) {
+			ICrafting iCrafting = (ICrafting) crafters.get(id);
+			if (brewTime != stand.getBrewTime()) {
+				iCrafting.sendProgressBarUpdate(this, 0, stand.getBrewTime());
 			}
-			if (this.brewFuel != this.tileFixedBrewingStand.getFuel()) {
-				iCrafting.sendProgressBarUpdate(this, 1, this.tileFixedBrewingStand.getFuel());
+			if (brewFuel != stand.getFuel()) {
+				iCrafting.sendProgressBarUpdate(this, 1, stand.getFuel());
 			}
-			if (this.brewCurrentFuel != this.tileFixedBrewingStand.getCurrentFuel()) {
-				iCrafting.sendProgressBarUpdate(this, 2, this.tileFixedBrewingStand.getCurrentFuel());
+			if (brewCurrentFuel != stand.getCurrentFuel()) {
+				iCrafting.sendProgressBarUpdate(this, 2, stand.getCurrentFuel());
 			}
 		}
-		this.brewTime = this.tileFixedBrewingStand.getBrewTime();
-		this.brewFuel = this.tileFixedBrewingStand.getFuel();
-		this.brewCurrentFuel = this.tileFixedBrewingStand.getCurrentFuel();
+		brewTime = stand.getBrewTime();
+		brewFuel = stand.getFuel();
+		brewCurrentFuel = stand.getCurrentFuel();
 	}
 
 	@SideOnly(Side.CLIENT)
 	@Override
 	public void updateProgressBar(int id, int value) {
 		if (id == 0) {
-			this.tileFixedBrewingStand.setBrewTime(value);
+			stand.setBrewTime(value);
 		}
 		if (id == 1) {
-			this.tileFixedBrewingStand.setFuel(value);
+			stand.setFuel(value);
 		}
 		if (id == 2) {
-			this.tileFixedBrewingStand.setCurrentFuel(value);
+			stand.setCurrentFuel(value);
 		}
 	}
 
 	@Override
 	public boolean canInteractWith(EntityPlayer player) {
-		return this.tileFixedBrewingStand.isUseableByPlayer(player);
+		return stand.isUseableByPlayer(player);
 	}
 
 	@Override
