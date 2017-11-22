@@ -38,28 +38,7 @@ public class GuiFixedStandEtFuturum extends GuiContainer {
 			scale = (int) (28F * (1F - brewTime / 400F));
 			if (scale > 0)
 				drawTexturedModalRect(xZero + 97, yZero + 16, 176, 0, 9, scale);
-			switch (brewTime / 2 % 7) {
-			case 0:
-				scale = 29;
-				break;
-			case 1:
-				scale = 24;
-				break;
-			case 2:
-				scale = 20;
-				break;
-			case 3:
-				scale = 16;
-				break;
-			case 4:
-				scale = 11;
-				break;
-			case 5:
-				scale = 6;
-				break;
-			case 6:
-				scale = 0;
-			}
+			scale = (new int[] { 29, 24, 20, 16, 11, 6, 0 })[brewTime / 2 % 7];
 			if (scale > 0)
 				drawTexturedModalRect(xZero + 63, yZero + 43 - scale, 185, 29 - scale, 12, scale);
 		}
