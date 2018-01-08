@@ -3,7 +3,7 @@
   "modid": "realisticbrewingstand",
   "name": "Realistic Brewing Stand",
   "description": "Little logical fix of the brewing stand.",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "mcversion": "1.7.10",
   "url": "",
   "authorList": ["MJaroslav"],

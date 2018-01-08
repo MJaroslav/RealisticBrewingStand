@@ -8,31 +8,31 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 
 public class RBSCommonProxy extends ProxyBase {
-	public static int fixedBrewingStandRI = RenderingRegistry.getNextAvailableRenderId();
+    public static int fixedBrewingStandRI = RenderingRegistry.getNextAvailableRenderId();
 
-	@Override
-	public void init(FMLInitializationEvent arg0) {
-	}
+    @Override
+    public void init(FMLInitializationEvent event) {
+    }
 
-	@Override
-	public void postInit(FMLPostInitializationEvent arg0) {
-	}
+    @Override
+    public void postInit(FMLPostInitializationEvent event) {
+    }
 
-	@Override
-	public void preInit(FMLPreInitializationEvent arg0) {
-	}
+    @Override
+    public void preInit(FMLPreInitializationEvent event) {
+    }
 
-	@Override
-	public EntityPlayer getEntityPlayer(MessageContext arg0) {
-		return arg0.getServerHandler().playerEntity;
-	}
+    @Override
+    public EntityPlayer getEntityPlayer(MessageContext ctx) {
+        return ctx.getServerHandler().playerEntity;
+    }
 
-	@Override
-	public Minecraft getMinecraft() {
-		return null;
-	}
+    @Override
+    public Minecraft getMinecraft() {
+        return null;
+    }
 
-	@Override
-	public void spawnParticle(String arg0, double arg1, double arg2, double arg3, Object... arg4) {
-	}
+    @Override
+    public void spawnParticle(String name, double x, double y, double z, Object... args) {
+    }
 }
