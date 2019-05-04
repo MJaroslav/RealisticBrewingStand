@@ -1,2 +1,2 @@
-FMLCorePlugin: mjaroslav.mcmods.realisticbrewingstand.RBSHookLoader
+FMLCorePlugin: mjaroslav.mcmods.realisticbrewingstand.hook.RBSHookLoader
 FMLCorePluginContainsFMLMod: true

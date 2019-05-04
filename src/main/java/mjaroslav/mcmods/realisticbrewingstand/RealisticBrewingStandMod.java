@@ -3,37 +3,17 @@ package mjaroslav.mcmods.realisticbrewingstand;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.SidedProxy;
-import cpw.mods.fml.common.event.*;
-import mjaroslav.mcmods.mjutils.common.objects.ModInitHandler;
-import mjaroslav.mcmods.realisticbrewingstand.common.RBSCommonProxy;
+import cpw.mods.fml.common.event.FMLInitializationEvent;
+import mjaroslav.mcmods.realisticbrewingstand.common.CommonProxy;
+import mjaroslav.mcmods.realisticbrewingstand.lib.ModInfo;
 
-@Mod(modid = RBSInfo.MODID, name = RBSInfo.NAME, version = RBSInfo.VERSION, dependencies = RBSInfo.DEPENDENCIES)
+@Mod(modid = ModInfo.MOD_ID, name = ModInfo.NAME, version = ModInfo.VERSION, dependencies = ModInfo.DEPENDENCIES)
 public class RealisticBrewingStandMod {
-    @SidedProxy(serverSide = RBSInfo.COMMONPROXY, clientSide = RBSInfo.CLIENTPROXY)
-    public static RBSCommonProxy proxy;
-
-    public static ModInitHandler initHandler = new ModInitHandler(RBSInfo.MODID);
-
-    @EventHandler
-    public void preInit(FMLPreInitializationEvent event) {
-        initHandler.preInit(event);
-        proxy.preInit(event);
-    }
+    @SidedProxy(serverSide = ModInfo.COMMON_PROXY, clientSide = ModInfo.CLIENT_PROXY)
+    public static CommonProxy proxy;
 
     @EventHandler
     public void init(FMLInitializationEvent event) {
-        initHandler.init(event);
         proxy.init(event);
-    }
-
-    @EventHandler
-    public void postInit(FMLPostInitializationEvent event) {
-        initHandler.postInit(event);
-        proxy.postInit(event);
-    }
-
-    @EventHandler
-    public void constr(FMLConstructionEvent event) {
-        initHandler.findModules(event);
     }
 }

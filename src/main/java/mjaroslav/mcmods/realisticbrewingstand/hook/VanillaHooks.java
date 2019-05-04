@@ -1,4 +1,4 @@
-package mjaroslav.mcmods.realisticbrewingstand;
+package mjaroslav.mcmods.realisticbrewingstand.hook;
 
 import mjaroslav.mcmods.realisticbrewingstand.gloomyfolken.hooklib.asm.Hook;
 import mjaroslav.mcmods.realisticbrewingstand.gloomyfolken.hooklib.asm.Hook.ReturnValue;
@@ -9,7 +9,8 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntityBrewingStand;
 
-public class RBSHooks {
+public class VanillaHooks {
+    public static final String DISABLE_ID = "hooks_vanilla";
 
     @Hook(returnCondition = ReturnCondition.ALWAYS, returnType = "void", createMethod = true)
     public static void onDataPacket(TileEntityBrewingStand instance, NetworkManager manager,
