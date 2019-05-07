@@ -13,9 +13,5 @@ public class RBSHookLoader extends HookLoader {
     protected void registerHooks() {
         if (HookConfig.vanilla())
             registerHookContainer(VanillaHooks.class.getName());
-        if (HookConfig.etFuturum())
-            registerHookContainer(EtFuturumHooks.class.getName());
-        if (HookConfig.hee())
-            registerHookContainer(HEEHooks.class.getName());
     }
 }

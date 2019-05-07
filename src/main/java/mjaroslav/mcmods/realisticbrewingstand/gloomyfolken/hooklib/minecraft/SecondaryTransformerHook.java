@@ -1,6 +1,6 @@
 package mjaroslav.mcmods.realisticbrewingstand.gloomyfolken.hooklib.minecraft;
 
-import cpw.mods.fml.common.Loader;
+import net.minecraftforge.fml.common.Loader;
 import mjaroslav.mcmods.realisticbrewingstand.gloomyfolken.hooklib.asm.Hook;
 import net.minecraft.launchwrapper.LaunchClassLoader;
 

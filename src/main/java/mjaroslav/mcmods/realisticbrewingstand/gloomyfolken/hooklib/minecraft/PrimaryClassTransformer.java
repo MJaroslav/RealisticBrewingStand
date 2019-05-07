@@ -6,7 +6,7 @@ import java.util.List;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Type;
 
-import cpw.mods.fml.common.asm.transformers.deobf.FMLDeobfuscatingRemapper;
+import net.minecraftforge.fml.common.asm.transformers.deobf.FMLDeobfuscatingRemapper;
 import mjaroslav.mcmods.realisticbrewingstand.gloomyfolken.hooklib.asm.*;
 import net.minecraft.launchwrapper.IClassTransformer;
 
