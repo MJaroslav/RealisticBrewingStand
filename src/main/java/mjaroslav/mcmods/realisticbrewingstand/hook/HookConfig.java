@@ -32,8 +32,6 @@ public class HookConfig {
                     COMMENT_MARK + " Required Minecraft restart.",
                     COMMENT_MARK + " Game changes that are dependent on disabled hooks will be disabled.",
                     COMMENT_MARK,
-                    COMMENT_MARK + " " + EtFuturumHooks.DISABLE_ID,
-                    COMMENT_MARK + " " + HEEHooks.DISABLE_ID,
                     COMMENT_MARK + " " + VanillaHooks.DISABLE_ID,
             };
             try {
@@ -53,13 +51,5 @@ public class HookConfig {
 
     public static boolean vanilla() {
         return hookIsEnabled(VanillaHooks.DISABLE_ID);
-    }
-
-    public static boolean hee() {
-        return hookIsEnabled(HEEHooks.DISABLE_ID);
-    }
-
-    public static boolean etFuturum() {
-        return hookIsEnabled(EtFuturumHooks.DISABLE_ID);
     }
 }

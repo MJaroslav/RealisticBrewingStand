@@ -1,9 +1,9 @@
 package mjaroslav.mcmods.realisticbrewingstand;
 
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.EventHandler;
-import cpw.mods.fml.common.SidedProxy;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.Mod.EventHandler;
+import net.minecraftforge.fml.common.SidedProxy;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import mjaroslav.mcmods.realisticbrewingstand.common.CommonProxy;
 import mjaroslav.mcmods.realisticbrewingstand.lib.ModInfo;
 

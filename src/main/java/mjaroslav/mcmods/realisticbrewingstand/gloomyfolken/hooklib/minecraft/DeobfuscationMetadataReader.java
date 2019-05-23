@@ -1,6 +1,6 @@
 package mjaroslav.mcmods.realisticbrewingstand.gloomyfolken.hooklib.minecraft;
 
-import cpw.mods.fml.common.asm.transformers.deobf.FMLDeobfuscatingRemapper;
+import net.minecraftforge.fml.common.asm.transformers.deobf.FMLDeobfuscatingRemapper;
 import mjaroslav.mcmods.realisticbrewingstand.gloomyfolken.hooklib.asm.ClassMetadataReader;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraft.launchwrapper.LaunchClassLoader;

@@ -2,8 +2,8 @@ package mjaroslav.mcmods.realisticbrewingstand.gloomyfolken.hooklib.minecraft;
 
 import java.util.Map;
 
-import cpw.mods.fml.common.asm.transformers.DeobfuscationTransformer;
-import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
+import net.minecraftforge.fml.common.asm.transformers.DeobfuscationTransformer;
+import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 import mjaroslav.mcmods.realisticbrewingstand.gloomyfolken.hooklib.asm.*;
 
 /**
