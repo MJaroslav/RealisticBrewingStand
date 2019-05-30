@@ -1,5 +1,7 @@
 package mjaroslav.mcmods.realisticbrewingstand.gloomyfolken.hooklib.example;
 
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import mjaroslav.mcmods.realisticbrewingstand.gloomyfolken.hooklib.asm.Hook;
 import mjaroslav.mcmods.realisticbrewingstand.gloomyfolken.hooklib.asm.Hook.ReturnValue;
 import mjaroslav.mcmods.realisticbrewingstand.gloomyfolken.hooklib.asm.ReturnCondition;
@@ -14,14 +16,14 @@ public class AnnotationHooks {
      * Цель: при каждом ресайзе окна выводить в консоль новый размер
      */
     @Hook
+    @SideOnly(Side.CLIENT)
     public static void resize(Minecraft mc, int x, int y) {
         System.out.println("Resize, x=" + x + ", y=" + y);
     }
 
     /**
-     * Цель: уменьшить вдвое показатели брони у всех игроков. P.S: фордж
-     * перехватывает получение показателя брони, ну а мы перехватим перехватчик
-     * :D
+     * Цель: уменьшить вдвое показатели брони у всех игроков.
+     * P.S: фордж перехватывает получение показателя брони, ну а мы перехватим перехватчик :D
      */
     @Hook(injectOnExit = true, returnCondition = ReturnCondition.ALWAYS)
     public static int getTotalArmorValue(ForgeHooks fh, EntityPlayer player, @ReturnValue int returnValue) {
@@ -29,8 +31,7 @@ public class AnnotationHooks {
     }
 
     /**
-     * Цель: запретить возможность телепортироваться в ад и обратно чаще, чем
-     * раз в пять секунд.
+     * Цель: запретить возможность телепортироваться в ад и обратно чаще, чем раз в пять секунд.
      */
     @Hook(returnCondition = ReturnCondition.ON_TRUE, intReturnConstant = 100)
     public static boolean getPortalCooldown(EntityPlayer player) {

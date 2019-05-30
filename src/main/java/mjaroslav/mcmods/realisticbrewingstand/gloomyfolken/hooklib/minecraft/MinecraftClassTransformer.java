@@ -1,17 +1,23 @@
 package mjaroslav.mcmods.realisticbrewingstand.gloomyfolken.hooklib.minecraft;
 
-import java.io.*;
-import java.util.*;
-
+import mjaroslav.mcmods.realisticbrewingstand.gloomyfolken.hooklib.asm.AsmHook;
+import mjaroslav.mcmods.realisticbrewingstand.gloomyfolken.hooklib.asm.HookClassTransformer;
+import mjaroslav.mcmods.realisticbrewingstand.gloomyfolken.hooklib.asm.HookInjectorClassVisitor;
+import net.minecraft.launchwrapper.IClassTransformer;
 import org.objectweb.asm.ClassWriter;
 
-import mjaroslav.mcmods.realisticbrewingstand.gloomyfolken.hooklib.asm.*;
-import net.minecraft.launchwrapper.IClassTransformer;
+import java.io.BufferedInputStream;
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
- * Этот трансформер занимается вставкой хуков с момента запуска майнкрафта.
- * Здесь сосредоточены все костыли, которые необходимы для правильной работы с
- * обфусцированными названиями методов.
+ * Этот трансформер занимается вставкой хуков с момента запуска майнкрафта. Здесь сосредоточены все костыли,
+ * которые необходимы для правильной работы с обфусцированными названиями методов.
  */
 public class MinecraftClassTransformer extends HookClassTransformer implements IClassTransformer {
 
@@ -43,8 +49,7 @@ public class MinecraftClassTransformer extends HookClassTransformer implements I
 
     private HashMap<Integer, String> loadMethodNames() throws IOException {
         InputStream resourceStream = getClass().getResourceAsStream("/methods.bin");
-        if (resourceStream == null)
-            throw new IOException("Methods dictionary not found");
+        if (resourceStream == null) throw new IOException("Methods dictionary not found");
         DataInputStream input = new DataInputStream(new BufferedInputStream(resourceStream));
         int numMethods = input.readInt();
         HashMap<Integer, String> map = new HashMap<Integer, String>(numMethods);
@@ -95,8 +100,7 @@ public class MinecraftClassTransformer extends HookClassTransformer implements I
     }
 
     /**
-     * Регистрирует трансформер, который будет запущен после обычных, и в том
-     * числе после деобфусцирующего трансформера.
+     * Регистрирует трансформер, который будет запущен после обычных, и в том числе после деобфусцирующего трансформера.
      */
     public static void registerPostTransformer(IClassTransformer transformer) {
         postTransformers.add(transformer);

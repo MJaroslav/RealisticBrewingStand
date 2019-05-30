@@ -3,6 +3,9 @@ package mjaroslav.mcmods.realisticbrewingstand.gloomyfolken.hooklib.asm;
 public enum HookPriority {
 
     HIGHEST, // Вызывается первым
-    HIGH, NORMAL, LOW, LOWEST // Вызывается последним
+    HIGH,
+    NORMAL,
+    LOW,
+    LOWEST // Вызывается последним
 
 }

@@ -28,11 +28,9 @@ public class DiskHookLib {
         }
         for (File file : getFiles(".class", untransformedDir)) {
             byte[] bytes = IOUtils.toByteArray(new FileInputStream(file));
-            String className = ""; // нужно из пути получить название класса
-                                   // через точки вроде ru.lol.DatClass
+            String className = ""; //нужно из пути получить название класса через точки вроде ru.lol.DatClass
             byte[] newBytes = transformer.transform(className, bytes);
-            // надо закинуть файл, состоящий из newBytes в transformedDir,
-            // сохранив путь
+            // надо закинуть файл, состоящий из newBytes в transformedDir, сохранив путь
         }
     }
 
@@ -50,5 +48,6 @@ public class DiskHookLib {
         }
         return files;
     }
+
 
 }

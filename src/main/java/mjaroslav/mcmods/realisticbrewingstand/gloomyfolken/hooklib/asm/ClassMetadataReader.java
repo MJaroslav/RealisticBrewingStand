@@ -9,11 +9,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 /**
- * Позволяет при помощи велосипеда из костылей искать методы внутри
- * незагруженных классов и общие суперклассы для чего угодно. Работает через
- * поиск class-файлов в classpath, и, в случае провала - ищет через рефлексию.
- * Для работы с майнкрафтом используется сабкласс под названием
- * DeobfuscationMetadataReader,
+ * Позволяет при помощи велосипеда из костылей искать методы внутри незагруженных классов
+ * и общие суперклассы для чего угодно. Работает через поиск class-файлов в classpath, и, в случае провала -
+ * ищет через рефлексию. Для работы с майнкрафтом используется сабкласс под названием DeobfuscationMetadataReader,
  */
 public class ClassMetadataReader {
     private static Method m;
@@ -42,8 +40,7 @@ public class ClassMetadataReader {
 
     public MethodReference findVirtualMethod(String owner, String name, String desc) {
         ArrayList<String> superClasses = getSuperClasses(owner);
-        for (int i = superClasses.size() - 1; i > 0; i--) { // чекать текущий
-                                                            // класс смысла нет
+        for (int i = superClasses.size() - 1; i > 0; i--) { // чекать текущий класс смысла нет
             String className = superClasses.get(i);
             MethodReference methodReference = getMethodReference(className, name, desc);
             if (methodReference != null) {
@@ -88,8 +85,8 @@ public class ClassMetadataReader {
     }
 
     /**
-     * Возвращает суперклассы в порядке возрастающей конкретности (начиная с
-     * java/lang/Object и заканчивая данным типом)
+     * Возвращает суперклассы в порядке возрастающей конкретности (начиная с java/lang/Object
+     * и заканчивая данным типом)
      */
     public ArrayList<String> getSuperClasses(String type) {
         ArrayList<String> superclasses = new ArrayList<String>(1);
@@ -130,8 +127,7 @@ public class ClassMetadataReader {
     protected String getSuperClassReflect(String type) {
         Class loadedClass = getLoadedClass(type);
         if (loadedClass != null) {
-            if (loadedClass.getSuperclass() == null)
-                return null;
+            if (loadedClass.getSuperclass() == null) return null;
             return loadedClass.getSuperclass().getName().replace('.', '/');
         }
         return "java/lang/Object";
@@ -146,8 +142,8 @@ public class ClassMetadataReader {
         }
 
         @Override
-        public void visit(int version, int access, String name, String signature, String superName,
-                String[] interfaces) {
+        public void visit(int version, int access, String name, String signature,
+                          String superName, String[] interfaces) {
             this.superClassName = superName;
         }
     }
@@ -166,7 +162,6 @@ public class ClassMetadataReader {
 
         @Override
         public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
-            System.out.println("visiting " + name + "#" + desc);
             if ((access & Opcodes.ACC_PRIVATE) == 0 && checkSameMethod(name, desc, targetName, targetDesc)) {
                 found = true;
                 targetName = name;
@@ -194,8 +189,11 @@ public class ClassMetadataReader {
 
         @Override
         public String toString() {
-            return "MethodReference{" + "owner='" + owner + '\'' + ", name='" + name + '\'' + ", desc='" + desc + '\''
-                    + '}';
+            return "MethodReference{" +
+                    "owner='" + owner + '\'' +
+                    ", name='" + name + '\'' +
+                    ", desc='" + desc + '\'' +
+                    '}';
         }
     }
 

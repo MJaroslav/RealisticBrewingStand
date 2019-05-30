@@ -1,10 +1,12 @@
 package mjaroslav.mcmods.realisticbrewingstand.gloomyfolken.hooklib.minecraft;
 
-import java.util.Map;
-
+import mjaroslav.mcmods.realisticbrewingstand.gloomyfolken.hooklib.asm.AsmHook;
+import mjaroslav.mcmods.realisticbrewingstand.gloomyfolken.hooklib.asm.ClassMetadataReader;
+import mjaroslav.mcmods.realisticbrewingstand.gloomyfolken.hooklib.asm.HookClassTransformer;
 import net.minecraftforge.fml.common.asm.transformers.DeobfuscationTransformer;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
-import mjaroslav.mcmods.realisticbrewingstand.gloomyfolken.hooklib.asm.*;
+
+import java.util.Map;
 
 /**
  * Удобная базовая реализация IFMLLoadingPlugin для использования HookLib.
@@ -12,20 +14,17 @@ import mjaroslav.mcmods.realisticbrewingstand.gloomyfolken.hooklib.asm.*;
  */
 public abstract class HookLoader implements IFMLLoadingPlugin {
 
-    static DeobfuscationTransformer deobfuscationTransformer;
+    private static DeobfuscationTransformer deobfuscationTransformer;
 
     private static ClassMetadataReader deobfuscationMetadataReader;
 
     static {
-        if (HookLibPlugin.getObfuscated()) {
-            deobfuscationTransformer = new DeobfuscationTransformer();
-        }
         deobfuscationMetadataReader = new DeobfuscationMetadataReader();
     }
 
     public static HookClassTransformer getTransformer() {
-        return PrimaryClassTransformer.instance.registeredSecondTransformer ? MinecraftClassTransformer.instance
-                : PrimaryClassTransformer.instance;
+        return PrimaryClassTransformer.instance.registeredSecondTransformer ?
+                MinecraftClassTransformer.instance : PrimaryClassTransformer.instance;
     }
 
     /**
@@ -46,13 +45,19 @@ public abstract class HookLoader implements IFMLLoadingPlugin {
         return deobfuscationMetadataReader;
     }
 
+    static DeobfuscationTransformer getDeobfuscationTransformer() {
+        if (HookLibPlugin.getObfuscated() && deobfuscationTransformer == null) {
+            deobfuscationTransformer = new DeobfuscationTransformer();
+        }
+        return deobfuscationTransformer;
+    }
+
     // 1.6.x only
     public String[] getLibraryRequestClass() {
         return null;
     }
 
     // 1.7.x only
-    @Override
     public String getAccessTransformerClass() {
         return null;
     }

@@ -1,16 +1,15 @@
 package mjaroslav.mcmods.realisticbrewingstand.gloomyfolken.hooklib.minecraft;
 
-import net.minecraftforge.fml.common.asm.transformers.deobf.FMLDeobfuscatingRemapper;
 import mjaroslav.mcmods.realisticbrewingstand.gloomyfolken.hooklib.asm.ClassMetadataReader;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraft.launchwrapper.LaunchClassLoader;
+import net.minecraftforge.fml.common.asm.transformers.deobf.FMLDeobfuscatingRemapper;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
 
 /**
- * Еще больше костылей вдобавок к ClassMetadataReader для работы с майновской
- * обфускацией.
+ * Еще больше костылей вдобавок к ClassMetadataReader для работы с майновской обфускацией.
  */
 public class DeobfuscationMetadataReader extends ClassMetadataReader {
 
@@ -18,8 +17,8 @@ public class DeobfuscationMetadataReader extends ClassMetadataReader {
 
     static {
         try {
-            runTransformers = LaunchClassLoader.class.getDeclaredMethod("runTransformers", String.class, String.class,
-                    byte[].class);
+            runTransformers = LaunchClassLoader.class.getDeclaredMethod("runTransformers",
+                    String.class, String.class, byte[].class);
             runTransformers.setAccessible(true);
         } catch (Exception e) {
             e.printStackTrace();
@@ -37,11 +36,9 @@ public class DeobfuscationMetadataReader extends ClassMetadataReader {
         return checkSameMethod(sourceName, targetName) && sourceDesc.equals(targetDesc);
     }
 
-    // Фордж и прочее могут своими патчами добавлять методы, которые нужно уметь
-    // оверрайдить хуками.
+    // Фордж и прочее могут своими патчами добавлять методы, которые нужно уметь оверрайдить хуками.
     // Для этого приходится применять трансформеры во время поиска супер-методов
-    // этот метод должен вызываться только во время загрузки сабклассов
-    // проверяемого класса,
+    // этот метод должен вызываться только во время загрузки сабклассов проверяемого класса,
     // так что все должно быть норм
     @Override
     protected MethodReference getMethodReferenceASM(String type, String methodName, String desc) throws IOException {
@@ -52,8 +49,8 @@ public class DeobfuscationMetadataReader extends ClassMetadataReader {
     }
 
     static byte[] deobfuscateClass(String className, byte[] bytes) {
-        if (HookLoader.deobfuscationTransformer != null) {
-            bytes = HookLoader.deobfuscationTransformer.transform(className, className, bytes);
+        if (HookLoader.getDeobfuscationTransformer() != null) {
+            bytes = HookLoader.getDeobfuscationTransformer().transform(className, className, bytes);
         }
         return bytes;
     }

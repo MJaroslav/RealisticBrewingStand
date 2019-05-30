@@ -18,14 +18,13 @@ public class HookLibPlugin implements IFMLLoadingPlugin {
     }
 
     // 1.7.x only
-    @Override
     public String getAccessTransformerClass() {
         return null;
     }
 
     @Override
     public String[] getASMTransformerClass() {
-        return new String[] { PrimaryClassTransformer.class.getName() };
+        return new String[]{PrimaryClassTransformer.class.getName()};
     }
 
     @Override

@@ -1,8 +1,7 @@
 package mjaroslav.mcmods.realisticbrewingstand.gloomyfolken.hooklib.asm;
 
 /**
- * В зависимости от этого значения после вызова хук-метода может быть вызван
- * return.
+ * В зависимости от этого значения после вызова хук-метода может быть вызван return.
  */
 
 public enum ReturnCondition {
@@ -18,27 +17,27 @@ public enum ReturnCondition {
     ALWAYS(false),
 
     /**
-     * return вызывается, если хук-метод вернул true. Нельзя применить, если
-     * хук-метод не возвращает тип boolean.
+     * return вызывается, если хук-метод вернул true.
+     * Нельзя применить, если хук-метод не возвращает тип boolean.
      */
     ON_TRUE(true),
 
     /**
-     * return вызывается, если хук-метод вернул null. Нельзя применить, если
-     * хук-метод возвращает void или примитив.
+     * return вызывается, если хук-метод вернул null.
+     * Нельзя применить, если хук-метод возвращает void или примитив.
      */
     ON_NULL(true),
 
     /**
-     * return вызывается, если хук-метод вернул не null. Нельзя применить, если
-     * хук-метод возвращает void или примитив.
+     * return вызывается, если хук-метод вернул не null.
+     * Нельзя применить, если хук-метод возвращает void или примитив.
      */
     ON_NOT_NULL(true);
 
-public final boolean requiresCondition;
+    public final boolean requiresCondition;
 
-ReturnCondition(boolean requiresCondition) {
-    this.requiresCondition = requiresCondition;
-}
+    ReturnCondition(boolean requiresCondition) {
+        this.requiresCondition = requiresCondition;
+    }
 
 }
