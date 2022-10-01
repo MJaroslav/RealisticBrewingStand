@@ -1,0 +1,19 @@
+{
+    "text.autoconfig.realisticbrewingstand.title": "RealisticBrewingStand",
+    "text.autoconfig.realisticbrewingstand.option.renderDistance": "Render distance",
+    "text.autoconfig.realisticbrewingstand.option.bottle1": "Bottle 1",
+    "text.autoconfig.realisticbrewingstand.option.bottle1.rotation": "Rotation",
+    "text.autoconfig.realisticbrewingstand.option.bottle1.x": "X",
+    "text.autoconfig.realisticbrewingstand.option.bottle1.y": "Y",
+    "text.autoconfig.realisticbrewingstand.option.bottle1.z": "Z",
+    "text.autoconfig.realisticbrewingstand.option.bottle2": "Bottle 2",
+    "text.autoconfig.realisticbrewingstand.option.bottle2.rotation": "Rotation",
+    "text.autoconfig.realisticbrewingstand.option.bottle2.x": "X",
+    "text.autoconfig.realisticbrewingstand.option.bottle2.y": "Y",
+    "text.autoconfig.realisticbrewingstand.option.bottle2.z": "Z",
+    "text.autoconfig.realisticbrewingstand.option.bottle3": "Bottle 3",
+    "text.autoconfig.realisticbrewingstand.option.bottle3.rotation": "Rotation",
+    "text.autoconfig.realisticbrewingstand.option.bottle3.x": "X",
+    "text.autoconfig.realisticbrewingstand.option.bottle3.y": "Y",
+    "text.autoconfig.realisticbrewingstand.option.bottle3.z": "Z"
+}

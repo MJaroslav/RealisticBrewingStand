@@ -1,5 +1,9 @@
 package com.github.mjaroslav.realisticbrewingstand.client.render.block.entity;
 
+import com.github.mjaroslav.realisticbrewingstand.RealisticBrewingStandMod;
+import com.github.mjaroslav.realisticbrewingstand.config.ModConfig.BottlePosition;
+import com.github.mjaroslav.realisticbrewingstand.util.Utils;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.entity.BrewingStandBlockEntity;
@@ -13,13 +17,15 @@ import net.minecraft.util.math.Vec3f;
 
 @Environment(value = EnvType.CLIENT)
 public class BrewingStandBlockEntityRenderer implements BlockEntityRenderer<BrewingStandBlockEntity> {
-    private static final float[] degresses = new float[] { -45, 45, 0 };
-    private static final double[] offsets = new double[] { -0.321, -0.325, 0.265 };
-
     private final ItemRenderer itemRenderer;
 
     public BrewingStandBlockEntityRenderer(ItemRenderer itemRenderer) {
         this.itemRenderer = itemRenderer;
+    }
+
+    @Override
+    public int getRenderDistance() {
+        return RealisticBrewingStandMod.getConfig().renderDistance;
     }
 
     @Override
@@ -36,8 +42,9 @@ public class BrewingStandBlockEntityRenderer implements BlockEntityRenderer<Brew
     private void renderSlot(int slot, ItemStack stack, MatrixStack matrices, VertexConsumerProvider consumer,
             int light, int overlay) {
         matrices.push();
-        matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(degresses[slot]));
-        matrices.translate(offsets[slot], 0, 0);
+        BottlePosition pos = Utils.getPositionBySlot(slot);
+        matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(pos.rotation));
+        matrices.translate(pos.x, pos.y, pos.z);
         itemRenderer.renderItem(stack, Mode.GROUND, light, overlay, matrices, consumer, 0);
         matrices.pop();
     }

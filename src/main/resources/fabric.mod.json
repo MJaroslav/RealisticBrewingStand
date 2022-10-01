@@ -5,13 +5,19 @@
     "name": "Realistic Brewing Stand",
     "description": "Little logical fix of the brewing stand.",
     "authors": [
-        "MJaroslav"
+        {
+            "name": "MJaroslav",
+            "contact": {
+                "homepage": "https://mjaroslav.github.io"
+            }
+        }
     ],
     "contact": {
         "homepage": "https://minecraft.curseforge.com/projects/realistic-brewing-stand",
-        "sources": "https://github.com/MJaroslav/RealisticBrewingStand"
+        "sources": "https://github.com/MJaroslav/RealisticBrewingStand",
+        "issues": "https://github.com/MJaroslav/RealisticBrewingStand/issues"
     },
-    "license": "WTFPL",
+    "license": "WTFPL-2",
     "icon": "assets/realisticbrewingstand/icon.png",
     "environment": "*",
     "entrypoints": {
@@ -20,6 +26,9 @@
         ],
         "client": [
             "com.github.mjaroslav.realisticbrewingstand.client.RealisticBrewingStandClientMod"
+        ],
+        "modmenu": [
+            "com.github.mjaroslav.realisticbrewingstand.integration.ModMenuIntegration"
         ]
     },
     "mixins": [
@@ -29,6 +38,10 @@
         "fabricloader": ">=0.14.9",
         "fabric-api": "*",
         "minecraft": "~1.19",
-        "java": ">=17"
+        "java": ">=17",
+        "cloth-config": ">=8.2.88"
+    },
+    "suggests": {
+        "modmenu": ">=4.0.6"
     }
 }
