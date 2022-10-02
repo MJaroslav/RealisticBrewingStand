@@ -7,7 +7,6 @@ import net.minecraft.item.ItemStack;
 
 public final class Utils {
     public static boolean isStackChanged(ItemStack prevStack, ItemStack stack) {
-        System.out.println(prevStack + " " + stack);
         if ((prevStack == null && stack != null) || (prevStack != null && stack == null))
             return true;
         if (prevStack == null && stack == null)
