@@ -2,70 +2,143 @@ buildscript {
     repositories {
         mavenCentral()
         maven {
-            name = "forge"
-            url = "http://files.minecraftforge.net/maven"
+            name 'forge'
+            url 'https://maven.minecraftforge.net/'
         }
-        maven {
-            name = "sonatype"
-            url = "https://oss.sonatype.org/content/repositories/snapshots/"
-        }
+        maven { url 'https://jitpack.io' }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
+        classpath('com.anatawa12.forge:ForgeGradle:1.2-1.0.+') {
+            changing = true
+        }
+        classpath('com.github.MJaroslav:Bon2Gradle:0.3.0')
     }
 }
 
 repositories {
+    mavenCentral()
     maven {
-            name "Mobius Repo"
-            url "http://mobiusstrip.eu/maven"
+        name 'jitpack'
+        url 'https://jitpack.io'
     }
     maven {
-        name 'CB Repo'
-        url "http://chickenbones.net/maven/"
+        url "https://cursemaven.com"
+        content {
+            includeGroup "curse.maven"
+        }
     }
     maven {
-        name = "jitpack"
-        url "https://jitpack.io"
+        name "Gregtech repo"
+        url 'https://gregtech.overminddl1.com'
     }
 }
 
+def buildprop = new Properties()
+file("build.properties").withInputStream { buildprop.load(it) }
+
+apply plugin: 'java'
 apply plugin: 'forge'
+if (buildprop.maven.toBoolean())
+    apply plugin: 'maven-publish'
+if (buildprop.mixins.toBoolean())
+    apply from: 'https://raw.githubusercontent.com/tox1cozZ/mixin-booter-legacy/master/gradle/configurations/v1.gradle'
+if (buildprop.ingametests.toBoolean())
+    apply from: 'https://raw.githubusercontent.com/MJaroslav/MCInGameTester/master/gradle/configurations/v1.gradle'
+apply plugin: 'bon2gradle'
 
-version = "1.3.0"
-group= "mjaroslav.mcmods.realisticbrewingstand"
-archivesBaseName = "realisticbrewingstand"
+version = buildprop.version
+group = buildprop.group
+archivesBaseName = project.name
 
-compileJava.options.encoding = 'UTF-8'
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+task devJar(type: Jar) {
+    classifier('dev')
+    manifest { from project.tasks.jar.manifest }
+    from sourceSets.main.output
+}
+
+artifacts {
+    archives devJar
+}
+
+java {
+    withSourcesJar()
+}
+
+if (buildprop.jabel.toBoolean()) configure([tasks.compileJava, tasks.compileTestJava, tasks.compileApiJava]) {
+    sourceCompatibility = 16 // for the IDE support
+    options.release = 8
+    javaCompiler = javaToolchains.compilerFor { languageVersion = JavaLanguageVersion.of(16) }
+} else sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+configurations {
+    if (buildprop.shading.toBoolean()) {
+        shade
+        implementation.extendsFrom(shade)
+    }
+}
 
 minecraft {
-    version = "1.7.10-10.13.4.1614-1.7.10"
-    runDir = "eclipse"
+    version = "${buildprop.game_version}-${buildprop.forge_version}-${buildprop.game_version}"
+    runDir = buildprop.run_dir
+    replace '@VERSION@', project.version
 }
 
 dependencies {
-    compile "codechicken:CodeChickenLib:1.7.10-1.1.3.138:dev"
-    compile "codechicken:CodeChickenCore:1.7.10-1.0.7.47:dev"
-    compile "codechicken:NotEnoughItems:1.7.10-1.0.5.120:dev"
-    compile "mcp.mobius.waila:Waila:1.5.10_1.7.10"
+    implementation "codechicken:CodeChickenLib:1.7.10-1.1.3.140:dev"
+    implementation "codechicken:CodeChickenCore:1.7.10-1.0.7.47:dev"
+    implementation "codechicken:NotEnoughItems:1.7.10-1.0.5.120:dev"
+    implementation "mcp.mobius.waila:Waila:1.5.11-RC2-NONEI_1.7.10:dev"
+
+    compileOnly "org.jetbrains:annotations:${buildprop.jetbrains_annotations_version}"
+
+    compileOnly "org.projectlombok:lombok:${buildprop.lombok_version}"
+    annotationProcessor "org.projectlombok:lombok:${buildprop.lombok_version}"
+
+    testCompileOnly "org.projectlombok:lombok:${buildprop.lombok_version}"
+    testAnnotationProcessor "org.projectlombok:lombok:${buildprop.lombok_version}"
+
+    if (buildprop.jabel.toBoolean()) {
+        annotationProcessor "com.github.bsideup.jabel:jabel-javac-plugin:${buildprop.jabel_version}"
+        testAnnotationProcessor "com.github.bsideup.jabel:jabel-javac-plugin:${buildprop.jabel_version}"
+    }
+
+    if (buildprop.junit.toBoolean()) testImplementation "junit:junit:${buildprop.junit_version}"
+
+    implementation "ganymedes01.etfuturum:Et_Futurum_Requiem:2.1.2:dev"
+    implementation bon2.deobf("curse.maven:hardcore-ender-expansion-228015:2316923")
 }
 
-processResources
-{
-    inputs.property "version", project.version
-    inputs.property "mcversion", project.minecraft.version
+test {
+    if (buildprop.junit.toBoolean()) useJUnit()
+}
+
+processResources {
+    inputs.property 'version', project.version
+    inputs.property 'mcversion', project.minecraft.version
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'
-        expand 'version':project.version, 'mcversion':project.minecraft.version
-    }
-    from(sourceSets.main.resources.srcDirs) {
-        exclude 'mcmod.info'
+        expand 'version': project.version, 'mcversion': project.minecraft.version
+        duplicatesStrategy = DuplicatesStrategy.INCLUDE
     }
 }
 
 jar {
-    manifest.attributes('FMLCorePlugin': 'mjaroslav.mcmods.realisticbrewingstand.hook.RBSHookLoader')
-    manifest.attributes('FMLCorePluginContainsFMLMod': 'true')
+    if (buildprop.coremod.toBoolean()) manifest {
+        // TODO: Don't forged about -Dfml.coreMods.load
+        attributes "FMLCorePlugin": "${project.group}.${project.name.replace(" ", "").toLowerCase()}" +
+                ".asm.${project.name.replace(" ", "")}Plugin"
+        attributes "FMLCorePluginContainsFMLMod": "true"
+    }
+    if (buildprop.shading.toBoolean()) configurations.shade.each { dep -> from project.zipTree(dep) }
+}
+
+if (buildprop.maven.toBoolean()) publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifact jar
+            artifact devJar
+            artifact sourcesJar
+        }
+    }
 }
