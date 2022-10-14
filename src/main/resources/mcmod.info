@@ -2,7 +2,7 @@
 {
   "modid": "realisticbrewingstand",
   "name": "Realistic Brewing Stand",
-  "description": "Little logical fix of the brewing stand.",
+  "description": "Little logical fix (in render) of the brewing stand.",
   "version": "${version}",
   "mcversion": "${mcversion}",
   "url": "https://minecraft.curseforge.com/projects/realistic-brewing-stand",
